@@ -1,10 +1,7 @@
 package com.hackathon.loanrequestservice.modal;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
@@ -16,6 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class LoanFormRequest {
     @NotNull(message = "Customer ID is mandatory to process the loan.")
     private Long customerId;
@@ -29,10 +27,13 @@ public class LoanFormRequest {
     @Min(value = 35000, message ="Minimum Salary should be INR 35,000.")
     private Long salaryPerMonth;
     private String visitingType;
-    @NotBlank(message = "Company name is mandatory field.")
+
     private String companyName;
     private String companyType;
-    @NotNull(message = "Company Rating value is mandatory field.")
+
     private int companyRating;
+
+    private String employmentType;
+    private long creditScore;
 
 }

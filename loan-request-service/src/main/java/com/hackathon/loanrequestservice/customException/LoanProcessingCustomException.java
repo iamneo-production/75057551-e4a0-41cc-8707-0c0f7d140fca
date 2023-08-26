@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class LoanProcessingCustomException extends Exception{
+public class LoanProcessingCustomException extends RuntimeException{
 
+    private String errCode;
+    private String errMessage;
 
-    private String errorMessage;
-    private String errorCode;
-    private String customerId;
+    public LoanProcessingCustomException(String errMessage, String errorCode){
+            this.errMessage = errMessage;
+            this.errCode = errorCode;
+    }
+
 }
