@@ -1,9 +1,9 @@
-package com.hackathon.loanrequestservice.customException;
+package com.hackathon.loaneligibilityservice.exceptions;
 
-import com.hackathon.loanrequestservice.modal.ErrorMessage;
+import com.hackathon.loaneligibilityservice.modal.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -11,13 +11,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.Date;
 
 @ControllerAdvice
-public class LoanProcessingExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(LoanProcessingCustomException.class)
-    public ResponseEntity<ErrorMessage> loanProcessError(LoanProcessingCustomException ex){
+public class LoanEligibilityExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(LoanEligibilityCustomException.class)
+    public ResponseEntity<ErrorMessage> CustomerLoanDataNotFoundException(LoanEligibilityCustomException ex){
 
         ErrorMessage errorVO = ErrorMessage.builder()
-                .errCode(ex.getErrCode())
-                .errMessage(ex.getErrMessage())
+                .errCode(ex.getErrorCode())
+                .errMessage(ex.getMessage())
                 .errDateTime(new Date())
                 .build();
 
