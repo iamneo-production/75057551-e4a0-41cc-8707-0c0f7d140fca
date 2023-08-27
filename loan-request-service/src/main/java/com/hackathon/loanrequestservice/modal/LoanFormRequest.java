@@ -14,6 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @ToString
+
 public class LoanFormRequest {
     @NotNull(message = "Customer ID is mandatory to process the loan.")
     private Long customerId;

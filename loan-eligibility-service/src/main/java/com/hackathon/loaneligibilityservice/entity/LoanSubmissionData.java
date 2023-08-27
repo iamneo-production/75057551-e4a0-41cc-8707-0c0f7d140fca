@@ -1,4 +1,4 @@
-package com.hackathon.loaneligibilityservice.modal;
+package com.hackathon.loaneligibilityservice.entity;
 
 import lombok.*;
 
@@ -11,7 +11,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 public class LoanSubmissionData {
 
     @Id

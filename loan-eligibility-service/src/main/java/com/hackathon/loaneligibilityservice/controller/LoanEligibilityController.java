@@ -1,7 +1,7 @@
 package com.hackathon.loaneligibilityservice.controller;
 
 import com.hackathon.loaneligibilityservice.exceptions.LoanEligibilityCustomException;
-import com.hackathon.loaneligibilityservice.modal.EligibilityResponseVO;
+import com.hackathon.loaneligibilityservice.modal.LoanEligibleDecisionVO;
 import com.hackathon.loaneligibilityservice.serviceImpl.LoanEligibilityProcessServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,10 +16,10 @@ public class LoanEligibilityController {
     LoanEligibilityProcessServiceImpl loanEligibilityProcessServiceImpl;
 
     @GetMapping("/{customerId}/{loanRequestId}")
-    public ResponseEntity<EligibilityResponseVO> checkLoanEligibility(@PathVariable("customerId") long customerId,
-                                                                      @PathVariable("loanRequestId") long loanRequestId)
+    public ResponseEntity<LoanEligibleDecisionVO> checkLoanEligibility(@PathVariable("customerId") long customerId,
+                                                                       @PathVariable("loanRequestId") long loanRequestId)
             throws LoanEligibilityCustomException {
-        EligibilityResponseVO eligibilityResponseVO = loanEligibilityProcessServiceImpl.checkLoanEligibility(customerId, loanRequestId);
-        return new ResponseEntity<>(eligibilityResponseVO, HttpStatus.OK);
+        LoanEligibleDecisionVO loanEligibleDecisionVO = loanEligibilityProcessServiceImpl.checkLoanEligibility(customerId, loanRequestId);
+        return new ResponseEntity<>(loanEligibleDecisionVO, HttpStatus.OK);
     }
 }

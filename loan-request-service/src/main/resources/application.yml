@@ -13,4 +13,9 @@ spring:
       ddl-auto: update
       show-sql: true
   application:
-    name: LOAN-SERVICE
+    name: LOAN-REQUEST-SERVICE
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

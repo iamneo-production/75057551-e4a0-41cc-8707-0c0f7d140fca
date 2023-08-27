@@ -1,20 +1,18 @@
-package com.hackathon.decisionengineservice.modal;
+package com.hackathon.loaneligibilityservice.modal;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class LoanEligibleDecisionVO {
 
     private Long customerId;
+    private int riskFactor;
 
     private Long loanReferenceId;
-    private int riskFactor;
     private String decisionTakenByEngineProcess;
 
     private String message;
