@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: secure_route
+          uri: lb://your-secure-service
+          predicates:
+            - Path=/secure/**
+          filters:
+            - JwtAuthenticationFilterFactory
+
+
