@@ -4,6 +4,7 @@ import com.hackathon.loanrequestservice.customException.LoanProcessingCustomExce
 import com.hackathon.loanrequestservice.modal.LoanFormRequest;
 import com.hackathon.loanrequestservice.modal.LoanSubmissionData;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public interface LoanRequestProcessService {
