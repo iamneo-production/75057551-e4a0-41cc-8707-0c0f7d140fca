@@ -5,6 +5,7 @@ import com.hackathon.decisionengineservice.modal.LoanEligibleDecisionVO;
 import com.hackathon.decisionengineservice.modal.LoanSubmissionDataVO;
 import com.hackathon.decisionengineservice.repository.LoanDecisionRulesRepo;
 import com.hackathon.decisionengineservice.service.DecisionEngineProcessService;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.OptionalLong;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
 public class DecisionEngineProcessServiceImpl implements DecisionEngineProcessService {
 
     @Autowired
@@ -24,14 +26,16 @@ public class DecisionEngineProcessServiceImpl implements DecisionEngineProcessSe
     public LoanEligibleDecisionVO executeDecisionBusinessRules(LoanSubmissionDataVO loanSubmissionDataVO) {
         LoanEligibleDecisionVO loanEligibleDecisionVO = new LoanEligibleDecisionVO();
         if(null != loanSubmissionDataVO){
+            log.info("Customer details passed for decision engine : {}", loanSubmissionDataVO);
             loanEligibleDecisionVO.setCustomerId(loanSubmissionDataVO.getCustomerId());
             loanEligibleDecisionVO.setLoanReferenceId(loanSubmissionDataVO.getLoanRequestId());
 
-            if(StringUtils.equalsIgnoreCase("SELF",loanSubmissionDataVO.getEmploymentType())){
+            //if(StringUtils.equalsIgnoreCase("SELF",loanSubmissionDataVO.getEmploymentType())){
                 List<LoanDecisionRulesDAO> decisionRules = getDecisionRules(loanSubmissionDataVO.getEmploymentType());
                 runDecisionEngineForSelfEmployedCustomers(loanEligibleDecisionVO, loanSubmissionDataVO,decisionRules);
-            }
+            //}
         }
+        log.info("Outcome form decision engine : {}", loanEligibleDecisionVO);
         return loanEligibleDecisionVO;
     }
 
