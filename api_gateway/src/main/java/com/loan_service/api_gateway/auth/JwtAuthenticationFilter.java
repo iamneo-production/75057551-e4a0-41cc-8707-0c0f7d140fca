@@ -16,7 +16,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 @Component
 public class JwtAuthenticationFilter implements GatewayFilter {
 
-    private static final String SECRET_KEY = "your-secret-key"; // Replace with your actual secret key
+    private static final String SECRET_KEY = "sucurity_key"; 
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -24,7 +24,7 @@ public class JwtAuthenticationFilter implements GatewayFilter {
 
         if (token != null && isValidToken(token)) {
             Claims claims = extractClaimsFromToken(token);
-            String username = claims.getSubject(); // Assuming the subject contains the username
+            String username = claims.getSubject();
 
             if (hasPermission(username, claims)) {
                 // User is authenticated and authorized
@@ -60,16 +60,10 @@ public class JwtAuthenticationFilter implements GatewayFilter {
     }
 
     private boolean hasPermission(String username, Claims claims) {
-        // Implement permission checks based on roles/claims in the token
-        // For example:
-        // String role = claims.get("role", String.class);
-        // return "admin".equals(role);
-        return true; // For demonstration purposes
+        List<String> roles = claims.get("roles", List.class);
+
+        return roles.contains("admin");
     }
 
 
-   /* @Override
-    public int getOrder() {
-        return Ordered.HIGHEST_PRECEDENCE;
-    }*/
 }

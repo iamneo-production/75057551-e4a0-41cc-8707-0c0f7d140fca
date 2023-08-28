@@ -22,9 +22,9 @@ import org.springframework.context.annotation.Configuration;
                     .route("secure_route", r -> r
                             .path("/secure/**")
                             .filters(f -> f
-                                    .filter(new JwtAuthenticationFilter()) // Custom filter to validate JWT
+                                    .filter(new JwtAuthenticationFilter()) 
                             )
-                            .uri("lb://your-secure-service") // Replace with actual service URI
+                            .uri("lb://secure-service") // actual service URI
                     )
                     .build();
         }
