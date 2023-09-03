@@ -1,0 +1,27 @@
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 128KB
+      max-request-size: 128KB
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    url: jdbc:mysql://localhost:3306/fixeddepositsdb
+    password: smiles@1221
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL57InnoDBDialect
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+  application:
+    name: DOC-MANAGEMENT-SERVICE
+
+server:
+  port: 8088
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
