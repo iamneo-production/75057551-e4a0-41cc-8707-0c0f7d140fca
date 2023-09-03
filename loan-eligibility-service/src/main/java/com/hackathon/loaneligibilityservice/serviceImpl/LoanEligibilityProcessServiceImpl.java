@@ -1,6 +1,7 @@
 package com.hackathon.loaneligibilityservice.serviceImpl;
 
 import com.hackathon.loaneligibilityservice.entity.CustomerLoanStatusAuditDAO;
+import com.hackathon.loaneligibilityservice.entity.LoanDocumentDetails;
 import com.hackathon.loaneligibilityservice.exceptions.LoanEligibilityCustomException;
 import com.hackathon.loaneligibilityservice.external.client.DecisionServiceExternal;
 import com.hackathon.loaneligibilityservice.entity.LoanSubmissionData;
@@ -8,14 +9,17 @@ import com.hackathon.loaneligibilityservice.modal.LoanEligibleDecisionVO;
 import com.hackathon.loaneligibilityservice.modal.LoanSubmissionDataVO;
 import com.hackathon.loaneligibilityservice.repository.CustomerLoanDetailsRepo;
 import com.hackathon.loaneligibilityservice.repository.CustomerLoanStatusAuditRepo;
+import com.hackathon.loaneligibilityservice.repository.LoanDocDetailsRepository;
 import com.hackathon.loaneligibilityservice.service.LoanEligibilityProcessService;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Log4j2
@@ -29,6 +33,9 @@ public class LoanEligibilityProcessServiceImpl implements LoanEligibilityProcess
 
     @Autowired
     CustomerLoanStatusAuditRepo customerLoanStatusAuditRepo;
+
+    @Autowired
+    LoanDocDetailsRepository loanDocDetailsRepository;
 
     @Override
     public LoanEligibleDecisionVO checkLoanEligibility(long customerId, long loanRequestId) throws LoanEligibilityCustomException {
@@ -76,8 +83,31 @@ public class LoanEligibilityProcessServiceImpl implements LoanEligibilityProcess
         if(!StringUtils.equalsIgnoreCase("SELF", loanSubmissionDataVO.getEmploymentType())
                 && StringUtils.isEmpty(loanSubmissionDataVO.getCompanyName())){
             log.info("Organisation name is mandatory for salaried customers. Customer id: {}", loanSubmissionDataVO.getCustomerId());
+
+            LoanEligibleDecisionVO loanEligibleDecisionVO = new LoanEligibleDecisionVO().builder()
+                    .loanReferenceId(loanSubmissionDataVO.getCustomerId())
+                    .customerId(loanSubmissionDataVO.getLoanRequestId())
+                    .decisionTakenByEngineProcess("HOLD")
+                    .message("Company Name is required if customer is not self-employed.")
+                    .build();
+            auditLoanStatus(loanEligibleDecisionVO.getCustomerId(),loanEligibleDecisionVO.getLoanReferenceId(),
+                    loanEligibleDecisionVO.getDecisionTakenByEngineProcess(), loanEligibleDecisionVO.getMessage());
             throw new LoanEligibilityCustomException(
                     "Company Name is required if customer is not self-employed.","COMPANY_NAME_REQUIRED");
+        }
+        List<LoanDocumentDetails> loanDocumentDetails = loanDocDetailsRepository.findByCustomerAndLoanId(
+                loanSubmissionDataVO.getCustomerId(), loanSubmissionDataVO.getLoanRequestId());
+        if(CollectionUtils.isEmpty(loanDocumentDetails)){
+            LoanEligibleDecisionVO loanEligibleDecisionVO = new LoanEligibleDecisionVO().builder()
+                    .loanReferenceId(loanSubmissionDataVO.getCustomerId())
+                    .customerId(loanSubmissionDataVO.getLoanRequestId())
+                    .decisionTakenByEngineProcess("HOLD")
+                    .message("Documents are not provided.")
+                    .build();
+            auditLoanStatus(loanEligibleDecisionVO.getCustomerId(),loanEligibleDecisionVO.getLoanReferenceId(),
+                    loanEligibleDecisionVO.getDecisionTakenByEngineProcess(), loanEligibleDecisionVO.getMessage());
+            throw new LoanEligibilityCustomException(
+                    "All Documents are not provided.","DOCUMENTS_NOT_PROVIDED");
         }
         return true;
     }
